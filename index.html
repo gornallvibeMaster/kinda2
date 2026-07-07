@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Мой курс</title>
+<style>
+  :root{
+    --bg: #ffffff;
+    --panel: #f5f7fa;
+    --panel-2: #eaeef4;
+    --text: #1a1d24;
+    --muted: #6b7280;
+    --accent: #1d5fd6;      /* синий */
+    --accent-2: #d61f2c;    /* красный */
+    --accent-dim: #e3ecfc;
+    --border: #dfe3e9;
+    --radius: 12px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--panel);
+    color:var(--text);
+    font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    min-height:100vh;
+  }
+
+  /* ===================== ГЛАВНОЕ МЕНЮ (разделы) ===================== */
+  #homeView{
+    max-width:960px;
+    margin:0 auto;
+    padding:40px 24px 60px;
+  }
+  #homeView h1{
+    font-size:22px;
+    margin:0 0 24px;
+  }
+  .section-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:20px;
+  }
+  @media (max-width:640px){
+    .section-grid{ grid-template-columns:1fr; }
+  }
+  .section-card{
+    background:var(--bg);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:24px;
+    cursor:pointer;
+    transition:box-shadow .15s ease, transform .15s ease, border-color .15s ease;
+  }
+  .section-card:hover{
+    box-shadow:0 8px 24px rgba(29,95,214,.12);
+    border-color:var(--accent);
+    transform:translateY(-2px);
+  }
+  .section-icon{
+    width:56px;
+    height:56px;
+    border-radius:14px;
+    background:linear-gradient(135deg, var(--accent), #123a8f);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:18px;
+  }
+  .section-icon svg{
+    width:28px;
+    height:28px;
+    stroke:#fff;
+    fill:none;
+  }
+  .section-count{
+    font-size:12.5px;
+    color:var(--accent-2);
+    font-weight:700;
+    margin-bottom:6px;
+  }
+  .section-title{
+    font-size:16.5px;
+    font-weight:700;
+    color:var(--text);
+  }
+
+  /* ===================== ВИД УРОКА (внутри раздела) ===================== */
+  #lessonView{
+    display:none;
+    min-height:100vh;
+    background:var(--bg);
+  }
+  .app{
+    display:flex;
+    min-height:100vh;
+  }
+
+  .sidebar{
+    width:300px;
+    flex-shrink:0;
+    background:var(--panel);
+    border-right:1px solid var(--border);
+    display:flex;
+    flex-direction:column;
+    height:100vh;
+    position:sticky;
+    top:0;
+  }
+  .sidebar-header{
+    padding:18px 18px 14px;
+    border-bottom:1px solid var(--border);
+  }
+  .back-link{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    color:var(--accent);
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    margin-bottom:10px;
+  }
+  .back-link:hover{ text-decoration:underline; }
+  .sidebar-header h1{
+    font-size:16px;
+    margin:0 0 4px;
+    font-weight:700;
+  }
+  .sidebar-header p{
+    margin:0;
+    font-size:12.5px;
+    color:var(--muted);
+  }
+  .lesson-list{
+    list-style:none;
+    margin:0;
+    padding:8px;
+    overflow-y:auto;
+    flex:1;
+  }
+  .lesson-item{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:11px 10px;
+    border-radius:8px;
+    cursor:pointer;
+    color:var(--muted);
+    transition:background .15s ease, color .15s ease;
+    margin-bottom:2px;
+  }
+  .lesson-item:hover{
+    background:var(--panel-2);
+    color:var(--text);
+  }
+  .lesson-item.active{
+    background:var(--accent-dim);
+    color:var(--accent);
+  }
+  .lesson-num{
+    font-size:11px;
+    font-variant-numeric: tabular-nums;
+    color:var(--muted);
+    min-width:20px;
+    padding-top:1px;
+  }
+  .lesson-item.active .lesson-num{ color:var(--accent-2); font-weight:700; }
+  .lesson-title{
+    font-size:13.5px;
+    line-height:1.4;
+  }
+
+  .main{
+    flex:1;
+    padding:32px 40px 60px;
+    max-width:900px;
+  }
+  .video-wrap{
+    width:100%;
+    aspect-ratio:16/9;
+    background:#0d0d0f;
+    border-radius:var(--radius);
+    border:1px solid var(--border);
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+  }
+  .video-wrap + .video-wrap{ margin-top:16px; }
+  .video-part-label{
+    font-size:12.5px;
+    font-weight:700;
+    color:var(--accent);
+    margin:0 0 8px;
+  }
+  .video-part-label:not(:first-child){ margin-top:20px; }
+  .video-wrap video, .video-wrap iframe{
+    width:100%;
+    height:100%;
+    display:block;
+    border:0;
+  }
+  .video-placeholder{
+    color:#c7c9d1;
+    font-size:13.5px;
+    text-align:center;
+    padding:20px;
+  }
+  .video-placeholder code{
+    display:block;
+    margin-top:8px;
+    background:#1c1d22;
+    padding:6px 10px;
+    border-radius:6px;
+    font-size:12px;
+    color:#7fb0ff;
+  }
+
+  .lesson-header{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    margin:26px 0 8px;
+  }
+  .lesson-header .eyebrow{
+    font-size:12px;
+    color:var(--accent-2);
+    font-weight:700;
+    letter-spacing:.02em;
+    text-transform:uppercase;
+  }
+  .lesson-header h2{
+    margin:0;
+    font-size:22px;
+    font-weight:700;
+  }
+  .lesson-desc{
+    color:var(--muted);
+    font-size:14.5px;
+    line-height:1.65;
+    white-space:pre-line;
+  }
+
+  .nav-buttons{
+    display:flex;
+    justify-content:space-between;
+    margin-top:36px;
+    border-top:1px solid var(--border);
+    padding-top:20px;
+  }
+  .nav-btn{
+    background:var(--bg);
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:10px 16px;
+    border-radius:8px;
+    font-size:13.5px;
+    cursor:pointer;
+    font-weight:600;
+  }
+  .nav-btn:hover{ border-color:var(--accent); color:var(--accent); }
+  .nav-btn:disabled{ opacity:.35; cursor:default; }
+  .nav-btn:disabled:hover{ border-color:var(--border); color:var(--text); }
+
+  .nav-btn.primary{
+    background:var(--accent-2);
+    border-color:var(--accent-2);
+    color:#fff;
+  }
+  .nav-btn.primary:hover{
+    background:#b91924;
+    border-color:#b91924;
+    color:#fff;
+  }
+  .nav-btn.primary:disabled{
+    background:var(--panel-2);
+    border-color:var(--border);
+    color:var(--muted);
+  }
+
+  @media (max-width: 760px){
+    .app{ flex-direction:column; }
+    .sidebar{
+      width:100%;
+      height:auto;
+      position:relative;
+      border-right:none;
+      border-bottom:1px solid var(--border);
+    }
+    .lesson-list{ max-height:260px; }
+    .main{ padding:24px 18px 40px; max-width:100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== ГЛАВНОЕ МЕНЮ ===================== -->
+<div id="homeView">
+  <h1>Мой курс</h1>
+  <div class="section-grid" id="sectionGrid"></div>
+</div>
+
+<!-- ===================== ВИД УРОКА ===================== -->
+<div id="lessonView">
+  <div class="app">
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <span class="back-link" id="backLink">← Все разделы</span>
+        <h1 id="sectionTitle"></h1>
+        <p id="progressLabel"></p>
+      </div>
+      <ul class="lesson-list" id="lessonList"></ul>
+    </div>
+
+    <div class="main">
+      <div id="videoArea"></div>
+
+      <div class="lesson-header">
+        <span class="eyebrow" id="lessonEyebrow"></span>
+        <h2 id="lessonTitle"></h2>
+      </div>
+      <div class="lesson-desc" id="lessonDesc"></div>
+
+      <div class="nav-buttons">
+        <button class="nav-btn" id="prevBtn">← Предыдущий урок</button>
+        <button class="nav-btn primary" id="nextBtn">Следующий урок →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   ДАННЫЕ КУРСА
+   ------------------------------------------------------------
+   sections — массив разделов. У каждого раздела:
+     - title   — название раздела (как на карточке)
+     - lessons — массив уроков внутри раздела
+
+   У каждого урока:
+     - title, desc  — название и описание
+     - source: "yandex" | "drive" | "direct" | ""
+     - videoSrc:
+         "yandex" → просто вставьте публичную ссылку с Яндекс.Диска,
+                     как она есть после кнопки «Поделиться»
+                     (например, https://disk.yandex.ru/i/xxxxxxxxx).
+                     Прямая ссылка на файл получается на странице
+                     автоматически, ничего конвертировать не нужно.
+         "drive"  → ID файла Google Drive (из ссылки .../d/ID/view)
+         "direct" → готовая прямая ссылка на mp4-файл
+
+   Чтобы добавить/убрать урок — просто добавьте/удалите объект
+   в нужном lessons. Чтобы добавить раздел — скопируйте блок
+   { title: "...", lessons: [...] } и вставьте в массив sections.
+   ============================================================ */
+
+function emptyLessons(n){
+  return Array.from({length:n}, (_, i) => ({
+    title: `Урок ${i+1}`,
+    desc: `Описание урока ${i+1}.`,
+    source: "",
+    videoSrc: ""
+  }));
+}
+
+const sections = [
+  { title: "Фундамент Claude",   lessons: (() => {
+      const l = emptyLessons(10);
+      l[0].source = "yandex";
+      l[0].videoSrc = "https://disk.yandex.ru/i/OoJ8mFDzF1a9-Q";
+      l[0].desc = "ВСТАВЬТЕ СЮДА ТЕКСТ ОПИСАНИЯ УРОКА";
+
+      l[1].title = "Почему Claude и что он умеет";
+      l[1].source = "yandex";
+      l[1].videoSrc = "https://disk.yandex.ru/i/gMueIYFGTNagoA";
+      l[1].desc = "ВСТАВЬТЕ СЮДА ТЕКСТ ОПИСАНИЯ УРОКА";
+
+      l[2].title = "Настройка Claude: подписка, аккаунт, интерфейс";
+      l[2].desc = "ВСТАВЬТЕ СЮДА ТЕКСТ ОПИСАНИЯ УРОКА";
+      l[2].videos = [
+        { label: "Часть 1", source: "yandex", videoSrc: "https://disk.yandex.ru/i/o1rFmlb3IVNF1A" },
+        { label: "Часть 2 (3.1)", source: "yandex", videoSrc: "https://disk.yandex.ru/i/GQ8FDY0sD3MVug" }
+      ];
+
+      return l;
+    })() },
+  { title: "Бизнес-мышление",    lessons: emptyLessons(8)  },
+  { title: "Проект для себя",    lessons: emptyLessons(7)  },
+  { title: "Проект на заказ",    lessons: emptyLessons(10) },
+  { title: "Свой MVP-продукт",   lessons: emptyLessons(8)  },
+  { title: "Контент и клиенты",  lessons: emptyLessons(6)  }
+];
+
+/* Иконка для карточек раздела — одна и та же нейтральная,
+   при желании можно заменить path на что угодно своё */
+const sectionIconSvg = `
+  <svg viewBox="0 0 24 24">
+    <path d="M4 4h16v16H4z" stroke-width="1.6" stroke-linejoin="round"/>
+    <path d="M8 9h8M8 13h8M8 17h4" stroke-width="1.6" stroke-linecap="round"/>
+  </svg>`;
+
+let currentSection = null;
+let currentLesson = 0;
+
+const homeView = document.getElementById('homeView');
+const lessonView = document.getElementById('lessonView');
+const sectionGrid = document.getElementById('sectionGrid');
+const sectionTitleEl = document.getElementById('sectionTitle');
+const progressLabel = document.getElementById('progressLabel');
+const lessonListEl = document.getElementById('lessonList');
+const videoArea = document.getElementById('videoArea');
+const lessonEyebrow = document.getElementById('lessonEyebrow');
+const lessonTitleEl = document.getElementById('lessonTitle');
+const lessonDesc = document.getElementById('lessonDesc');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const backLink = document.getElementById('backLink');
+
+function renderHome(){
+  sectionGrid.innerHTML = '';
+  sections.forEach((s, i) => {
+    const card = document.createElement('div');
+    card.className = 'section-card';
+    card.innerHTML = `
+      <div class="section-icon">${sectionIconSvg}</div>
+      <div class="section-count">${s.lessons.length} уроков</div>
+      <div class="section-title">${s.title}</div>
+    `;
+    card.addEventListener('click', () => openSection(i));
+    sectionGrid.appendChild(card);
+  });
+}
+
+function openSection(i){
+  currentSection = i;
+  currentLesson = 0;
+  homeView.style.display = 'none';
+  lessonView.style.display = 'block';
+  sectionTitleEl.textContent = sections[i].title;
+  renderList();
+  renderLesson();
+  window.scrollTo({top:0});
+}
+
+function closeSection(){
+  lessonView.style.display = 'none';
+  homeView.style.display = 'block';
+  currentSection = null;
+}
+
+function renderList(){
+  const lessons = sections[currentSection].lessons;
+  lessonListEl.innerHTML = '';
+  lessons.forEach((l, i) => {
+    const li = document.createElement('li');
+    li.className = 'lesson-item' + (i === currentLesson ? ' active' : '');
+    li.innerHTML = `
+      <span class="lesson-num">${String(i+1).padStart(2,'0')}</span>
+      <span class="lesson-title">${l.title}</span>
+    `;
+    li.addEventListener('click', () => selectLesson(i));
+    lessonListEl.appendChild(li);
+  });
+  progressLabel.textContent = `Урок ${currentLesson+1} из ${lessons.length}`;
+}
+
+/* Кэш уже полученных прямых ссылок, чтобы не запрашивать API повторно */
+const yandexLinkCache = {};
+
+async function resolveYandexLink(publicUrl){
+  if (yandexLinkCache[publicUrl]) return yandexLinkCache[publicUrl];
+  const api = `https://cloud-api.yandex.net/v1/disk/public/resources/download?public_key=${encodeURIComponent(publicUrl)}`;
+  const res = await fetch(api);
+  if (!res.ok) throw new Error('yandex api error ' + res.status);
+  const data = await res.json();
+  if (!data.href) throw new Error('no href in response');
+  yandexLinkCache[publicUrl] = data.href;
+  return data.href;
+}
+
+function videoHtmlFor(source, videoSrc, slotId){
+  if (source === 'drive' && videoSrc) {
+    return `<div class="video-wrap"><iframe src="https://drive.google.com/file/d/${videoSrc}/preview" allow="autoplay"></iframe></div>`;
+  }
+  if (source === 'direct' && videoSrc) {
+    return `<div class="video-wrap"><video controls src="${videoSrc}"></video></div>`;
+  }
+  if (source === 'yandex' && videoSrc) {
+    return `<div class="video-wrap" id="${slotId}"><div class="video-placeholder">Загружаю видео с Яндекс.Диска…</div></div>`;
+  }
+  return `<div class="video-wrap"><div class="video-placeholder">
+      Видео ещё не добавлено.<br>
+      Яндекс.Диск (ссылка «Поделиться»): <code>source:"yandex", videoSrc:"https://disk.yandex.ru/i/..."</code><br>
+      Google Drive: <code>source:"drive", videoSrc:"ID_файла"</code><br>
+      Прямая ссылка на mp4: <code>source:"direct", videoSrc:"https://..."</code>
+    </div></div>`;
+}
+
+async function fillYandexSlot(slotId, publicUrl){
+  const slot = document.getElementById(slotId);
+  if (!slot) return;
+  try {
+    const directUrl = await resolveYandexLink(publicUrl);
+    slot.innerHTML = `<video controls src="${directUrl}"></video>`;
+  } catch(e) {
+    slot.innerHTML = `
+      <div class="video-placeholder">
+        Не удалось автоматически получить видео.<br>
+        Проверьте, что ссылка публичная (доступна без входа в аккаунт) и указана верно.<br>
+        <code>${publicUrl}</code>
+      </div>`;
+  }
+}
+
+function loadVideo(l){
+  if (Array.isArray(l.videos) && l.videos.length){
+    videoArea.innerHTML = l.videos.map((v, idx) => {
+      const slotId = `yv-slot-${idx}`;
+      return `<div class="video-part-label">${v.label || 'Видео ' + (idx+1)}</div>` +
+             videoHtmlFor(v.source, v.videoSrc, slotId);
+    }).join('');
+    l.videos.forEach((v, idx) => {
+      if (v.source === 'yandex' && v.videoSrc) fillYandexSlot(`yv-slot-${idx}`, v.videoSrc);
+    });
+    return;
+  }
+
+  const slotId = 'yv-slot-single';
+  videoArea.innerHTML = videoHtmlFor(l.source, l.videoSrc, slotId);
+  if (l.source === 'yandex' && l.videoSrc) fillYandexSlot(slotId, l.videoSrc);
+}
+
+function renderLesson(){
+  const l = sections[currentSection].lessons[currentLesson];
+  lessonEyebrow.textContent = `Урок ${String(currentLesson+1).padStart(2,'0')}`;
+  lessonTitleEl.textContent = l.title;
+  lessonDesc.textContent = l.desc;
+
+  loadVideo(l);
+
+  const lessons = sections[currentSection].lessons;
+  prevBtn.disabled = currentLesson === 0;
+  nextBtn.disabled = currentLesson === lessons.length - 1;
+}
+
+function selectLesson(i){
+  currentLesson = i;
+  renderList();
+  renderLesson();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+prevBtn.addEventListener('click', () => { if(currentLesson>0) selectLesson(currentLesson-1); });
+nextBtn.addEventListener('click', () => {
+  const lessons = sections[currentSection].lessons;
+  if(currentLesson < lessons.length-1) selectLesson(currentLesson+1);
+});
+backLink.addEventListener('click', closeSection);
+
+renderHome();
+</script>
+
+</body>
+</html>
