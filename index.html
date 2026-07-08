@@ -482,34 +482,22 @@ function renderList(){
   progressLabel.textContent = `Урок ${currentLesson+1} из ${lessons.length}`;
 }
 
-/* Кэш уже полученных прямых ссылок, чтобы не запрашивать API повторно за один визит */
+/* Кэш уже полученных прямых ссылок, чтобы не запрашивать worker повторно за один визит */
 const yandexLinkCache = {};
+
+/* Ваш собственный Cloudflare Worker — надёжно обходит блокировку браузера (CORS) */
+const YANDEX_RESOLVER = "https://yandex-resolver.gornall666.workers.dev/";
 
 async function resolveYandexLink(publicUrl){
   if (yandexLinkCache[publicUrl]) return yandexLinkCache[publicUrl];
-  const api = `https://cloud-api.yandex.net/v1/disk/public/resources/download?public_key=${encodeURIComponent(publicUrl)}`;
 
-  // Попытка 1: напрямую
-  try {
-    const res = await fetch(api);
-    if (res.ok) {
-      const data = await res.json();
-      if (data.href) {
-        yandexLinkCache[publicUrl] = data.href;
-        return data.href;
-      }
-    }
-  } catch(e) { /* переходим к варианту через прокси */ }
-
-  // Попытка 2: через прокси, который обходит блокировку браузера (CORS)
-  const proxied = `https://api.allorigins.win/raw?url=${encodeURIComponent(api)}`;
-  const res2 = await fetch(proxied);
-  if (!res2.ok) throw new Error('yandex api error (proxy) ' + res2.status);
-  const text = await res2.text();
-  const data2 = JSON.parse(text);
-  if (!data2.href) throw new Error('no href in response');
-  yandexLinkCache[publicUrl] = data2.href;
-  return data2.href;
+  const workerUrl = `${YANDEX_RESOLVER}?url=${encodeURIComponent(publicUrl)}`;
+  const res = await fetch(workerUrl);
+  if (!res.ok) throw new Error('worker error ' + res.status);
+  const data = await res.json();
+  if (!data.href) throw new Error('no href in response');
+  yandexLinkCache[publicUrl] = data.href;
+  return data.href;
 }
 
 function videoHtmlFor(source, videoSrc, slotId){
