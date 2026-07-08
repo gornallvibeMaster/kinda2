@@ -196,6 +196,22 @@
     margin:0 0 8px;
   }
   .video-part-label:not(:first-child){ margin-top:20px; }
+
+  .open-video-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    margin-top:10px;
+    padding:9px 14px;
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:8px;
+    color:var(--accent);
+    text-decoration:none;
+    font-size:13px;
+    font-weight:600;
+  }
+  .open-video-btn:hover{ border-color:var(--accent); background:var(--accent-dim); }
   .video-wrap video, .video-wrap iframe{
     width:100%;
     height:100%;
@@ -368,20 +384,20 @@ function emptyLessons(n){
 const sections = [
   { title: "Фундамент Claude",   lessons: (() => {
       const l = emptyLessons(10);
-      l[0].source = "direct";
-      l[0].videoSrc = "https://downloader.disk.yandex.ru/disk/4bd43c7d44bce1582f1ee177a61ad0eef515977683c1588e5ac61ae7cae28af0/6a4d2021/aMCOpHPUXGcX8ZJ9olIiDS-wLeqQx1NUa3FtDmKiC7VELr1loT-Z4lOx2c6tE2WPQexeodj6cDC7MYt7FDs2Yg%3D%3D?uid=0&filename=1%20%D0%92%D0%B0%D0%B6%D0%BD%D0%BE%20%D0%BF%D0%B5%D1%80%D0%B5%D0%B4%20%D1%81%D1%82%D0%B0%D1%80%D1%82%D0%BE%D0%BC.mp4&disposition=attachment&hash=%2BYmxE3LByyVMMlC3J/4cLfhU9VvHho9mrHJVMM04yAa7A6z6EUw8DVqXLiXyzMYhq/J6bpmRyOJonT3VoXnDag%3D%3D%3A&limit=0&content_type=video%2Fmp4&owner_uid=564029551&fsize=107544251&hid=2da469f0d226151141e8f6f143b713a6&media_type=video&tknv=v3&is_direct_zip_experiment=1";
+      l[0].source = "yandex";
+      l[0].videoSrc = "https://disk.yandex.ru/i/OoJ8mFDzF1a9-Q";
       l[0].desc = "ВСТАВЬТЕ СЮДА ТЕКСТ ОПИСАНИЯ УРОКА";
 
       l[1].title = "Почему Claude и что он умеет";
-      l[1].source = "direct";
-      l[1].videoSrc = "https://downloader.disk.yandex.ru/disk/22dfdff5741cd509c969bd5fc583bbce4ad68c03104d9797d420c57e9d992c8d/6a4d2089/b0dPdnWHnOWzWjyShuD-Z4sm7k377PA6AXEDf1PdAxcR6Dfz83OaN9zYPJm0VWG25hAKR9PREI4s7G0Bz8iQ_A%3D%3D?uid=0&filename=2%20%D0%9F%D0%BE%D1%87%D0%B5%D0%BC%D1%83%20Claude%20%D0%B8%20%D1%87%D1%82%D0%BE%20%D0%BE%D0%BD%20%D1%83%D0%BC%D0%B5%D0%B5%D1%82.mp4&disposition=attachment&hash=k67nZ3gmxRm5v89%2B%2BpsO/2dedC3kjshiQvHY3hkeHMTHJxdxjCQjqhMeVHaTUtBxq/J6bpmRyOJonT3VoXnDag%3D%3D%3A&limit=0&content_type=video%2Fmp4&owner_uid=564029551&fsize=206387307&hid=8f7ed99514b2098a691ff9be02d1e867&media_type=video&tknv=v3&is_direct_zip_experiment=1";
+      l[1].source = "yandex";
+      l[1].videoSrc = "https://disk.yandex.ru/i/gMueIYFGTNagoA";
       l[1].desc = "ВСТАВЬТЕ СЮДА ТЕКСТ ОПИСАНИЯ УРОКА";
 
       l[2].title = "Настройка Claude: подписка, аккаунт, интерфейс";
       l[2].desc = "ВСТАВЬТЕ СЮДА ТЕКСТ ОПИСАНИЯ УРОКА";
       l[2].videos = [
-        { label: "Часть 1", source: "direct", videoSrc: "https://downloader.disk.yandex.ru/disk/552507448d57fd630569508a598fc72d47f96a922581135d780a931068ee0815/6a4d20a5/aMCOpHPUXGcX8ZJ9olIiDS-BVT-5Tzp4yNGIpU6Aw9Zz4ri_kJzBZS1vHSu_8bZd8Htk-R0dKeangSMeEgqCFQ%3D%3D?uid=0&filename=3%20%D0%9D%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B9%D0%BA%D0%B0%20Claude_%20%D0%BF%D0%BE%D0%B4%D0%BF%D0%B8%D1%81%D0%BA%D0%B0%2C%20%D0%B0%D0%BA%D0%BA%D0%B0%D1%83%D0%BD%D1%82%2C%20%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D1%84%D0%B5%D0%B9%D1%81.mp4&disposition=attachment&hash=cjtXS70bd%2BXeH3IBoJp7jYNGE%2B5dFso/21ZMEUeeR1BTd%2BB6O9sSsvc7tJZgtZzJq/J6bpmRyOJonT3VoXnDag%3D%3D%3A&limit=0&content_type=video%2Fmp4&owner_uid=564029551&fsize=331663348&hid=308b84762809250e61d95e7b2acb57c1&media_type=video&tknv=v3&is_direct_zip_experiment=1" },
-        { label: "Часть 2 (3.1)", source: "direct", videoSrc: "https://downloader.disk.yandex.ru/disk/d03d39ee3b41de1fd4569de19248d0889b9e43bfbb47bd060d6bc9c7eee5775f/6a4d20c1/aMCOpHPUXGcX8ZJ9olIiDeMP8_J_oDRTveOHpYZdqiwlZg7l5Wh7P1C5UNPUBN_5uj5tDlS9SkR8P2eaKpTQww%3D%3D?uid=0&filename=3.1%20%D0%9D%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B9%D0%BA%D0%B0%20Claude_%20%D0%BF%D0%BE%D0%B4%D0%BF%D0%B8%D1%81%D0%BA%D0%B0%2C%20%D0%B0%D0%BA%D0%BA%D0%B0%D1%83%D0%BD%D1%82%2C%20%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D1%84%D0%B5%D0%B9%D1%81%203.1.mp4&disposition=attachment&hash=4LLKf/vbtP0uIvklD/krgpRt89UwHZuQx9P9wqIWv/rSipKMTmB1ks/NKp3TQfUCq/J6bpmRyOJonT3VoXnDag%3D%3D%3A&limit=0&content_type=video%2Fmp4&owner_uid=564029551&fsize=306307836&hid=5ca5440c1eda6d03660b60138117100d&media_type=video&tknv=v3&is_direct_zip_experiment=1" }
+        { label: "Часть 1", source: "yandex", videoSrc: "https://disk.yandex.ru/i/o1rFmlb3IVNF1A" },
+        { label: "Часть 2 (3.1)", source: "yandex", videoSrc: "https://disk.yandex.ru/i/GQ8FDY0sD3MVug" }
       ];
 
       return l;
@@ -466,18 +482,34 @@ function renderList(){
   progressLabel.textContent = `Урок ${currentLesson+1} из ${lessons.length}`;
 }
 
-/* Кэш уже полученных прямых ссылок, чтобы не запрашивать API повторно */
+/* Кэш уже полученных прямых ссылок, чтобы не запрашивать API повторно за один визит */
 const yandexLinkCache = {};
 
 async function resolveYandexLink(publicUrl){
   if (yandexLinkCache[publicUrl]) return yandexLinkCache[publicUrl];
   const api = `https://cloud-api.yandex.net/v1/disk/public/resources/download?public_key=${encodeURIComponent(publicUrl)}`;
-  const res = await fetch(api);
-  if (!res.ok) throw new Error('yandex api error ' + res.status);
-  const data = await res.json();
-  if (!data.href) throw new Error('no href in response');
-  yandexLinkCache[publicUrl] = data.href;
-  return data.href;
+
+  // Попытка 1: напрямую
+  try {
+    const res = await fetch(api);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.href) {
+        yandexLinkCache[publicUrl] = data.href;
+        return data.href;
+      }
+    }
+  } catch(e) { /* переходим к варианту через прокси */ }
+
+  // Попытка 2: через прокси, который обходит блокировку браузера (CORS)
+  const proxied = `https://api.allorigins.win/raw?url=${encodeURIComponent(api)}`;
+  const res2 = await fetch(proxied);
+  if (!res2.ok) throw new Error('yandex api error (proxy) ' + res2.status);
+  const text = await res2.text();
+  const data2 = JSON.parse(text);
+  if (!data2.href) throw new Error('no href in response');
+  yandexLinkCache[publicUrl] = data2.href;
+  return data2.href;
 }
 
 function videoHtmlFor(source, videoSrc, slotId){
@@ -488,7 +520,9 @@ function videoHtmlFor(source, videoSrc, slotId){
     return `<div class="video-wrap"><video controls src="${videoSrc}"></video></div>`;
   }
   if (source === 'yandex' && videoSrc) {
-    return `<div class="video-wrap" id="${slotId}"><div class="video-placeholder">Загружаю видео с Яндекс.Диска…</div></div>`;
+    return `
+      <div class="video-wrap" id="${slotId}"><div class="video-placeholder">Загружаю видео с Яндекс.Диска…</div></div>
+      <a class="open-video-btn" href="${videoSrc}" target="_blank" rel="noopener">Открыть видео на Яндекс.Диске ↗</a>`;
   }
   return `<div class="video-wrap"><div class="video-placeholder">
       Видео ещё не добавлено.<br>
@@ -507,9 +541,7 @@ async function fillYandexSlot(slotId, publicUrl){
   } catch(e) {
     slot.innerHTML = `
       <div class="video-placeholder">
-        Не удалось автоматически получить видео.<br>
-        Проверьте, что ссылка публичная (доступна без входа в аккаунт) и указана верно.<br>
-        <code>${publicUrl}</code>
+        Автовстраивание не сработало — воспользуйтесь кнопкой ниже, чтобы открыть видео.
       </div>`;
   }
 }
